@@ -6,9 +6,10 @@ Check the health of the running pod by describing it with the list of events, in
 ## Configure Environment
 ### Initialize Kubernetes Cluster
 
-minikube start
+`minikube start`
 
 ### Deploy Pod
 Create a configuration yaml file:
-vim pod.yaml
+`vim pod.yaml`
 Set the following contents:
+`

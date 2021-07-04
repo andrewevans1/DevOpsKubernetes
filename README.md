@@ -10,6 +10,27 @@ Check the health of the running pod by describing it with the list of events, in
 
 ### Deploy Pod
 Create a configuration yaml file:
+
 `vim pod.yaml`
+
 Set the following contents:
-`
+
+`apiVersion: v1
+kind: Pod
+metadata:
+  name: mulit-container
+spec: 
+  terminationGracePeriodSeconds: 0
+  containers:
+  - name: webserver
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+  - name: alpine
+    image: alpine:3.5
+    command: ["watch", "wget", "-qO-", "localhost"]
+  volumes:
+  - name: html-volume
+    hostPath:
+      path: /html
+      type: Directory`

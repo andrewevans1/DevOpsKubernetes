@@ -55,3 +55,9 @@ Navigate to localhost:1313/index.html in a browser, the current date should be p
 If you refresh, the time will update due to the second container editing the file in the shared volume.
 
 ## Inspect the Pod
+Describe the pod
+`kubectl describe pods multi-container`
+
+Inspect pod logs
+`kubectl logs multi-container webserver`
+`kubectl logs multi-container worker`

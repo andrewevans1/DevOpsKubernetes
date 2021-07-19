@@ -19,7 +19,7 @@ Set the following contents:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: mulit-container
+  name: multi-container
 spec: 
   terminationGracePeriodSeconds: 0
   containers:
@@ -27,17 +27,41 @@ spec:
     image: nginx:latest
     ports:
     - containerPort: 80
-  - name: alpine
-    image: alpine:3.5
-    command: ["watch", "wget", "-qO-", "localhost"]
+    volumeMounts:
+    - name: html-volume
+      mountPath: /usr/share/nginx/html
+  - name: worker
+    image: nginx:latest
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do date > /usr/share/nginx/html/index.html; sleep 1; done"]
+    volumeMounts:
+    - name: html-volume
+      mountPath: /usr/share/nginx/html
   volumes:
   - name: html-volume
     hostPath:
-      path: /html
-      type: Directory`
+      path: /usr/share/nginx/html
+      type: DirectoryOrCreate
 ```
 
 Create the pod:
+
 `kubectl create -f pod.yaml`
 
-## Create HTML File
+Forward port across kubernetes
+`kubectl port-forward --address 0.0.0.0 pod/multi-container 1313:80`
+We exposed port 80 on the container (default for nginx), but the container is nested within Kubernetes. This way we can bind kubernetes to port 1313 and it will direct us to our container.
+
+Navigate to localhost:1313/index.html in a browser, the current date should be presented. 
+If you refresh, the time will update due to the second container editing the file in the shared volume.
+
+## Inspect the Pod
+Describe the pod
+
+`kubectl describe pods multi-container`
+
+Inspect pod logs:
+
+`kubectl logs multi-container webserver`
+
+`kubectl logs multi-container worker`

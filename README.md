@@ -15,7 +15,8 @@ Create a configuration yaml file:
 
 Set the following contents:
 
-`apiVersion: v1
+```
+apiVersion: v1
 kind: Pod
 metadata:
   name: mulit-container
@@ -34,3 +35,9 @@ spec:
     hostPath:
       path: /html
       type: Directory`
+```
+
+Create the pod:
+`kubectl create -f pod.yaml`
+
+## Create HTML File
